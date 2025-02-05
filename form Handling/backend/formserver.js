@@ -37,6 +37,7 @@ app.post('/Form', async (req, res) => {
   
     const formData = new stateForm(req.body);
 
+    
     console.log(">>>>>>formData>>>")
 
     await formData.save(); 
@@ -45,6 +46,24 @@ app.post('/Form', async (req, res) => {
   
 });
 
+app.get('/data', async (req, res) => {
+  const result = await stateForm.find();
+  res.status(200).json(result);
+  console.log('>>>>>data>>>', result);
+});
+
+app.post('/Delete',async(req,res)=>{
+ try {
+  const {id}=req.body
+  await  stateForm.findByIdAndDelete(id)
+  res.json({success:true})
+ } catch (error) {
+  console.log(error);
+  res.json({success:false})
+  
+ }
+  
+})
 
 
   app.listen(port, () => {

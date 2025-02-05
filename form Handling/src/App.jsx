@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+
+  const [getdata,setGetData]=useState([])
   
   const [formData, setFormData] = useState({
     name: '',
@@ -12,6 +14,19 @@ function App() {
     age: ''
   });
 
+  const dataform=async()=>{
+    const result= await axios.get('http://localhost:6080/data')
+    console.log('>>>>>>>>>data form>>',result.data)
+    setGetData(result.data)
+  }
+     
+  const  [Fetch,setFetch]=useState(false)
+  
+  useEffect(() => {
+    dataform()
+  
+  }, [Fetch]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -19,34 +34,44 @@ function App() {
   };
 
   
-  const handleSubmit = (e) => {
+
+
+  
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log(formData); 
 
     alert('Form submitted');
 
 
-
-
-    axios.post('http://localhost:6080/form', formData)
+    await axios.post('http://localhost:6080/form', formData)
     .then((response) => {
       console.log(response.data);
-      alert('Form submitted successfully');
+      setFormData({ name: '', email: '', password: '', gender: '', city: '', age: '' });
+    setFetch(p=>!p)
+      alert('Form submitted ');
     })
     .catch((error) => {
-      console.error('There was an error!', error);
-      alert('Error submitting form');
+      console.error(' error!', error);
+      alert('Error ');
     });
-
-    
-    setFormData({ name: '', email: '', password: '', gender: '', city: '', age: '' });
-
-   
   };
 
- 
+
+  
+  const Delete=async(id)=>{
+    
+    await axios.post(`http://localhost:6080/Delete`,{
+      id
+    })
+  //  const a= getdata.filter(i=>i._id==id)
+  setFetch(p=>!p)
 
 
+    // setGetData(a)
+
+  }
+  
   return (
     <div>
       <h1>Registration Form</h1>
@@ -125,8 +150,36 @@ function App() {
           <button type="submit">Submit</button>
         </div>
       </form>
+
+
+      <h2>Users List</h2>
+     
+     <div>
+    {getdata.map((item, index) => (
+      <li key={index}>
+       Name: {item.name}, Email: {item.email}, City: {item.city}, Age: {item.age}
+       <br></br>
+       <button onClick={()=>Delete(item._id)} >delete</button>
+   
+      </li>
+    ))}
+     </div>
+
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
