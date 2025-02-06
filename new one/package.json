@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node server4.js",
-    "server": "nodemon server4.js"
+    "start": "node server3.js",
+    "server": "nodemon server3.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
+    "moment": "^2.30.1",
     "mongoose": "^8.9.5",
     "nodeman": "^1.1.2"
   }
