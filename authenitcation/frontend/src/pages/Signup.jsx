@@ -12,6 +12,7 @@ function Signup() {
     })
 
     const navigate = useNavigate();
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         console.log(name, value);
