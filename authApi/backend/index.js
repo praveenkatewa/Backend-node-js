@@ -3,11 +3,18 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const monent = require('moment')
-require('dotenv').config();
 const router = require('./Router/UserRoute')
 
-const port = process.env.PORT || 5080;
 
+require('dotenv').config();
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+app.use(cors())
+app.use('/std',router)
+
+
+
+const port = process.env.PORT || 5080;
 const mongoUri = process.env.MONGO_URL;
 
 mongoose.connect(mongoUri)
@@ -16,16 +23,6 @@ mongoose.connect(mongoUri)
 }).catch((error)=>{
   console.log('Error in connection', error)
 })
-
-
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
-app.use(cors())
-
-app.use('/std',router)
-
-
-
 
 app.listen(port,()=>{
   console.log('Server is running on port', port)

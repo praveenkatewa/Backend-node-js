@@ -2,6 +2,7 @@ const studentData = require('../Model/UserModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const secretkey = 'dv5v45g455eer34ff5tt545ge34'
+const employeeModel=require('../Model/employeeModel')
 
 exports.signUp = async(req,res)=>{
   const {name,email,password} = req.body;
@@ -29,7 +30,7 @@ exports.login = async(req,res)=>{
     const {email,password} = req.body;
     const userEmail = await studentData.findOne({email})
     if(!userEmail){
-      return res.status(404).json({msg:"login first"})
+      return res.status(404).json({msg:"signup first"})
     }
     const isMatch = bcrypt.compareSync(password,userEmail.password)
     if(!isMatch){
@@ -96,4 +97,31 @@ exports.delete = async(req,res)=>{
     res.status(404).json({msg:"recod not found"})
   }
   res.status(200).json({msg:"Data deleted",newData})
+}
+
+
+
+
+exports.createemployee = async(req,res)=>{
+  console.log("......>>>>req.body",req.body)
+  const {name,email,number} = req.body;
+  if(!(name)){
+    return res.status(404).json({msg:"all feild requird"})
+  }
+  const employeeData = new employeeModel(req.body)
+  console.log(">>>data>>",employeeData)
+  await employeeData.save()
+  res.status(201).json(employeeData)
+
+}
+
+exports.getemployee=async(req,res)=>{
+  console.log(">>>>>get employye",req.user)
+  const userId=req.user._id
+
+ const userData= await  employeeModel.find(userId)
+ console.log(">>>userdata",userData)
+//  await userData.save()
+ res.status(201).json(userData)
+
 }

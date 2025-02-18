@@ -15,14 +15,14 @@ const signup = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
-      ...formData, // Spread the existing formData
-      [name]: value // Update the field, given the name and value passed
+      ...formData, 
+      [name]: value 
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+   
     console.log('Form submitted:', formData);
     try {
       await axios.post('http://localhost:3000/std/signup', { ...formData });
