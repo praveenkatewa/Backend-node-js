@@ -57,8 +57,15 @@ exports.studentCreate = async(req,res)=>{
 } 
 
 exports.findAll = async(req,res)=>{
-    const myStudentData = await studentData.find()
+    // const myStudentData = await studentData.find()
+    // console.log(req.user);
+    // return;
+    const user_id=req.user._id;
+    console.log(">>>>user_id>>>",user_id)
+    // return
+    const myStudentData =await studentData.find({userId:user_id}).populate('userId')
     res.status(200).json(myStudentData)
+
     console.log(myStudentData)
 }
 
@@ -104,7 +111,7 @@ exports.delete = async(req,res)=>{
 
 exports.createemployee = async(req,res)=>{
   console.log("......>>>>req.body",req.body)
-  const {name,email,number} = req.body;
+  const {name,email,salary, experience} = req.body;
   if(!(name)){
     return res.status(404).json({msg:"all feild requird"})
   }
@@ -119,9 +126,9 @@ exports.getemployee=async(req,res)=>{
   console.log(">>>>>get employye",req.user)
   const userId=req.user._id
 
- const userData= await  employeeModel.find(userId)
+ const userData= await  employeeModel.find({userId})
  console.log(">>>userdata",userData)
-//  await userData.save()
+
  res.status(201).json(userData)
 
 }

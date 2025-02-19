@@ -8,7 +8,7 @@ router.post('/signup',userController.signUp)
 router.post('/login',userController.login)
 
 
-router.get('/findAll',userController.findAll)
+router.get('/findAll',auth,userController.findAll)
 
 router.get('/getOne/:id',userController.getOne)
 
@@ -19,5 +19,7 @@ router.patch('/update',userController.update)
 
 
 
+router.post('/createemployee',userController.createemployee)
+router.get('/getemployee',userController.getemployee)
 router.post('/add',userController.studentCreate)
 module.exports = router;
