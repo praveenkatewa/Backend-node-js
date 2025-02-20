@@ -2,7 +2,7 @@ const studentData = require('../Model/UserModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const secretkey = 'dv5v45g455eer34ff5tt545ge34'
-const employeeModel=require('../Model/employeeModel')
+const employeeData=require('../Model/employeeModel')
 
 exports.signUp = async(req,res)=>{
   const {name,email,password} = req.body;
@@ -63,10 +63,17 @@ exports.findAll = async(req,res)=>{
     const user_id=req.user._id;
     console.log(">>>>user_id>>>",user_id)
     // return
-    const myStudentData =await studentData.find({userId:user_id}).populate('userId')
-    res.status(200).json(myStudentData)
 
-    console.log(myStudentData)
+    // (1)  it find that id which connect userid  
+    // const myemployeeData =await employeeData.find({userId:user_id}).populate('userId')
+
+
+    // (2) it find all id here 
+    const myemployeeData =await employeeData.find().populate('userId')
+
+    res.status(200).json(myemployeeData)
+
+    console.log(myemployeeData)
 }
 
 exports.getOne = async(req,res)=>{
@@ -108,19 +115,52 @@ exports.delete = async(req,res)=>{
 
 
 
+// (1)when create by send data by body
 
+// exports.createemployee = async(req,res)=>{
+//   console.log("......>>>>req.body",req.body)
+//   const {name,email,salary, experience} = req.body;
+//   if(!(name)){
+//     return res.status(404).json({msg:"all feild requird"})
+//   }
+//   const employeeData = new employeeModel(req.body)
+//   console.log(">>>data>>",employeeData)
+//   await employeeData.save()
+//   res.status(201).json(employeeData)
+
+// }
+
+
+
+// (2) when we pass login id 
 exports.createemployee = async(req,res)=>{
-  console.log("......>>>>req.body",req.body)
-  const {name,email,salary, experience} = req.body;
+  console.log(`>>>req.user>>`,req.user);
+  const userId=req.user._id
+  console.log(`>>>>userId>>`,userId)
+
+  const {name,email,salary,code, experience} = req.body;
   if(!(name)){
     return res.status(404).json({msg:"all feild requird"})
   }
-  const employeeData = new employeeModel(req.body)
+
+  const data={
+    userId,name,email,phone,code,exprerience
+  }
+  const employeeData = new employeeModel(data)
   console.log(">>>data>>",employeeData)
   await employeeData.save()
   res.status(201).json(employeeData)
 
 }
+
+
+
+
+
+
+
+
+
 
 exports.getemployee=async(req,res)=>{
   console.log(">>>>>get employye",req.user)
