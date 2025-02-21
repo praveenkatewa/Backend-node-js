@@ -22,7 +22,15 @@ const students = new Schema({
   type:String,
   required:false
  },
- 
+ OTP: { 
+  type: Number,
+   required: true },
+   
+   OTPExpiryTime: { 
+      type: Date,
+      required: true
+    }
+
 },{versionKey:false,timestamps:true})
 
 const studentData = mongoose.model('students', students)

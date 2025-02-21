@@ -9,8 +9,10 @@ module.exports = async(req,res,next) =>{
   if(!token){
     return res.status(401).json({massage:"Unauthoriza"});
   }
+
   const splitToken = token.split(" ")[1]
   console.log(">>>>>>SplitToken>>>",splitToken)
+  
   
   const decode = jwt.verify(splitToken,secretkey)
   console.log(">>>>Decode>>>",decode)

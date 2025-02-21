@@ -19,7 +19,7 @@ router.patch('/update',userController.update)
 
 
 
-router.post('/createemployee',userController.createemployee)
+router.post('/createemployee',auth,userController.createemployee)
 router.get('/getemployee',userController.getemployee)
 router.post('/add',userController.studentCreate)
 module.exports = router;

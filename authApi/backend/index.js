@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const monent = require('moment')
+const moment = require('moment')
 const router = require('./Router/UserRoute')
 
 
