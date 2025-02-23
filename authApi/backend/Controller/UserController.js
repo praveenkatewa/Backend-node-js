@@ -9,6 +9,7 @@ const moment= require('moment');
 
 
 
+
 exports.signUp = async(req,res)=>{
   const {name,email,password} = req.body;
   console.log(req.body)
