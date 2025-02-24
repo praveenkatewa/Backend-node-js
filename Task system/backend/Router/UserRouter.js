@@ -1,18 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../Controller/UserController');
+const UserController= require('../Controller/UserController');
 const { auth } = require('../Middleware/AuthMiddleware');
-const {createTask,getTasks,updateTask} = require('../Controller/TaskController');
-
-// router.use(auth);
-
-router.post('/register', register);
-router.post('/login', login);
+const TaskController = require('../Controller/TaskController');
 
 
 
-// router.post('/createTask', authorize('admin', 'team_lead'), createTask);
-// router.get('/getTasks', getTasks);
-// router.put('/updateTask', updateTask);
+router.post('/register', UserController. register);
+router.post('/login',UserController.login);
+
+router.get('/getuser',TaskController.getuser);
+
+router.put('/updatePassword',auth,UserController.updatePassword);
+
+router.post('/forgotPassword',UserController.forgotPassword);
+
+
+router.post('/createTask',auth,TaskController.createTask);
+
+router.get('/myTasks',auth,TaskController.myTasks);
+
+
+router.get('/myAssignedTasks',auth,TaskController.myAssignedTasks);
 
 module.exports = router;

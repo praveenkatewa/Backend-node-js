@@ -25,18 +25,8 @@ exports.auth = async(req,res,next) =>{
     return res.status(401).json({massage:'user not found'})
 
   }
-  req.user=user;
+  // req.user=user;
+  req.user = { userId: user._id, name: user.name }; 
 next()
 };
 
-
-exports.authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ 
-        message: 'You do not have permission to perform this action' 
-      });
-    }
-    next();
-  };
-};

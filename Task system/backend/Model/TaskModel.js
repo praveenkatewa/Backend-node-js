@@ -5,10 +5,10 @@ const taskSchema = new Schema({
   title: {
     type: String,
     required: true,
-    trim: true
+  
   },
-  description: {
-    type: String,
+  dueDate: {
+    type: Date,
     required: true
   },
   assignedBy: {
@@ -23,17 +23,13 @@ const taskSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'in_progress', 'completed'],
-    default: 'pending'
-  },
-  deadline: {
-    type: Date,
     required: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+  remark: {
+    type: String,
+    required: true
+  },
+ 
 });
 
 

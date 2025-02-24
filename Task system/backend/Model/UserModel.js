@@ -5,7 +5,7 @@ const userSchema = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+   
   },
   email: {
     type: String,
@@ -21,10 +21,16 @@ const userSchema = new Schema({
     enum: ['admin', 'team_lead', 'developer'],
     default: 'developer'
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  address: {
+    type: String
+  },
+  color: {
+    type: String
+  },
+  phone: {
+    type: String
   }
+  
 },{versionKey:false,timestamps:true});
 
 
