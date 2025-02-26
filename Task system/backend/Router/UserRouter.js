@@ -23,4 +23,6 @@ router.get('/myTasks',auth,TaskController.myTasks);
 
 router.get('/myAssignedTasks',auth,TaskController.myAssignedTasks);
 
+router.put('/:id', auth,TaskController. updateTask);  
+router.delete('/:id', auth,TaskController. deleteTask);  
 module.exports = router;

@@ -29,7 +29,9 @@ const userSchema = new Schema({
   },
   phone: {
     type: String
-  }
+  },
+  
+
   
 },{versionKey:false,timestamps:true});
 
