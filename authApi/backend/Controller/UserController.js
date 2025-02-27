@@ -6,8 +6,8 @@ const employeeData=require('../Model/employeeModel')
 const generateOTP =require('../Helper/otp')
 const moment= require('moment');
 
-
-
+const nodemailer=require('nodemailer')
+require('dotenv').config();
 
 
 exports.signUp = async(req,res)=>{
@@ -76,6 +76,116 @@ exports.studentCreate = async(req,res)=>{
   await userdata.save()
   return res.status(201).json(userdata)
 } 
+
+
+
+
+
+
+
+// exports.sendMail = async(req,res)=>{  
+  
+//   console.log(">>>>>body sendemail>>>",req.body)
+
+//   const transporter = nodemailer.createTransport({
+//     host:'smtp.gmail.com',
+//     auth:{
+//       user:process.env.Email_User,
+//       pass:process.env.Email_password
+//     }
+//   });
+
+//   const info= await transporter.sendMail({
+//     from:process.env.Email_User,
+//     to:req.body.to,
+//     subject:req.body.subject,
+//     text:req.body.text,
+//     html:"<b>hello nodemailer</b>"
+//   });
+
+// }
+// console.log("Message sent: %s", info);
+// console.log("Preview URL: %s",info);
+// if(info.messageId){ 
+// res.status(200).json({msg:"Email sent successfully TO  ${req.body.to}"})
+// }
+
+
+
+
+// exports.sendMail = async (req, res) => {
+// const {to,subject,text} = req.body;
+//     console.log(">>>>> body sendemail >>>", req.body);
+// // return
+//     const info=await this.sendGmail(to,subject,text)
+
+//     if(info.messageId){
+//       return res.status(200).json({msg:`Email sent successfully TO ${req.body.to}`})
+//     }}
+
+
+// exports.sendGmail=async(to,subject,text)=>{
+//   const transporter = nodemailer.createTransport({
+//     host:'smtp.gmail.com',
+//     port:587,
+//     auth:{
+//       user:process.env.Email_User,
+//       pass:process.env.Email_password
+//     }
+//   });
+//   const info= await transporter.sendMail({
+//     from:process.env.Email_User,
+//     to:to,
+//     subject:subject,
+//     text:text,
+//     html:"<b>hello nodemailer</b>"
+//   });
+// }
+
+
+
+exports.sendMail = async (req, res) => {
+    const { to, subject, text } = req.body;
+    console.log(">>>>> body sendemail >>>", text);
+
+    try {
+        const info = await sendGmail(to, subject, text); // Use exports.sendGmail to correctly reference the function
+
+
+        if (info.messageId) {
+            return res.status(200).json({ msg: `Email sent successfully TO ${req.body.to}` });
+        } else {
+            return res.status(500).json({ msg: "Failed to send email" });
+        }
+    } catch (error) {
+        console.error("Error sending email:", error);
+        return res.status(500).json({ msg: "Error sending email", error: error.message });
+    }
+};
+
+const sendGmail =  async (to, subject, text) => {
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false, // Use true for port 465, false for other ports
+        auth: {
+            user: 'praveenkatewa.45@gmail.com',
+            pass: 'uhzy ezsr ynmg hsrt',
+        },
+    });
+
+    const info = await transporter.sendMail({
+        from: 'praveenkatewa.45@gmail.com',
+        to: to,
+        subject: subject,
+        text: text,
+        // html: "<b>hello nodemailer</b>",
+    });
+
+    return info; // Return the result
+};
+
+
 
 exports.findAll = async(req,res)=>{
     // const myStudentData = await studentData.find()
@@ -194,3 +304,6 @@ exports.getemployee=async(req,res)=>{
  res.status(201).json(userData)
 
 }
+
+
+

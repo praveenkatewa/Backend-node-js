@@ -22,4 +22,6 @@ router.patch('/update',userController.update)
 router.post('/createemployee',auth,userController.createemployee)
 router.get('/getemployee',userController.getemployee)
 router.post('/add',userController.studentCreate)
+
+router.post('/sendmail',userController.sendMail)
 module.exports = router;

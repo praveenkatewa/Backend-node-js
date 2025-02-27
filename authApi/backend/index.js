@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const router = require('./Router/UserRoute')
-const nodemailer= require('nodemailer')
+
 
 require('dotenv').config();
 app.use(express.json())
@@ -25,31 +25,27 @@ mongoose.connect(mongoUri)
 })
 
 
+// const transporter = nodemailer.createTransport({
+//   // service:'gmail',
+//   host: 'gmail',
+//   auth:{
+//     user:process.env.Email_User,
+//     pass:process.env.Email_password
+//   }
+// });
 
+// const mailOption = {
+//   from:process.env.Email_User,
+//   to:process.env.Email_TO,
+//   subject:'Sending Email using Node.js',
+//   text:'That was easy!'
+// };
 
-const transporter = nodemailer.createTransport({
-  service:'gmail',
-  auth:{
-    user:process.env.Email_User,
-    pass:process.env.Email_password
-  }
-});
-
-const mailOption = {
-  from:process.env.Email_User,
-  to:process.env.Email_User,
-  subject:'Sending Email using Node.js',
-  text:'That was easy!'
-};
-
-
-transporter.sendMail(mailOption,(error,info)=>{
-  if(error){
-    console.log(error)
-  }else{
-    console.log('Email sent:',info.response)
-  }
-})
+// async function sendEmail (){
+//   const sendMail =  await transporter.sendMail(mailOption)
+//   console.log(`>>>>>>>>>>sendMail`,sendMail);
+// }
+// sendEmail()
 
 
 app.listen(port,()=>{
