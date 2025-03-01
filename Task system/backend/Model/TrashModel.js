@@ -1,11 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const taskSchema = new Schema({
+const taskTrashSchema = new Schema({
   title: {
     type: String,
     required: true,
-  
   },
   dueDate: {
     type: Date,
@@ -29,15 +28,13 @@ const taskSchema = new Schema({
     type: String,
     required: true
   },
+ 
   isActive: {
     type: Boolean,
-    default: true, // false means task is in trash
+    default: false, // false means task is in trash
   }
- 
- 
 });
 
+const trashData = mongoose.model('TaskTrash', taskTrashSchema);
+module.exports = trashData;
 
-
-const taskData=mongoose.model('Task', taskSchema);
-module.exports=taskData

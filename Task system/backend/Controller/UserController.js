@@ -37,10 +37,10 @@ exports.register = async(req,res)=>{
 
 
 
+
 exports.login = async(req,res)=>{
   const {email,password} = req.body;
-  // console.log(req.body)
-// return
+
   const user = await userData.findOne({email})
   if(!user){
     return res.status(404).json({msg:"signup first"})

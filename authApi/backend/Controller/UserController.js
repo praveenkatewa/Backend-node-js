@@ -11,6 +11,8 @@ require('dotenv').config();
 
 
 exports.signUp = async(req,res)=>{
+
+  // const fileUploadData=await uploadFile(req.files)
   const {name,email,password} = req.body;
   console.log(req.body)
 

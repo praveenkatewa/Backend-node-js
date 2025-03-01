@@ -2,6 +2,7 @@
 
 const taskData = require('../Model/TaskModel')
 const userData = require('../Model/UserModel')
+// const trashData= require('../Model/TrashModel')
 
 
 exports.createTask = async(req,res)=>{
@@ -38,7 +39,8 @@ exports.getuser=async(req,res)=>{
 exports.myTasks = async (req, res) => {
     const tasks = await taskData.find({ assignedTo: req.user.userId })
       .populate('assignedBy', 'name')
-      .populate('assignedTo', 'name');
+      // .populate('assignedTo', 'name');
+      console.log(">>>>>>tasks>>>>>",tasks)
   
     res.status(201).json(tasks);
   }
@@ -74,10 +76,11 @@ exports.myTasks = async (req, res) => {
       res.status(200).json({ msg: "Task updated successfully", task });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ msg: "Server error", error: error.message });
+      res.status(500).json({ msg: "Server error" });
     }
   };
   
+
   // Delete Task (Only Assigned By User Can Delete)
   exports.deleteTask = async (req, res) => {
     try {
@@ -90,8 +93,45 @@ exports.myTasks = async (req, res) => {
   
       res.status(200).json({ msg: "Task deleted successfully" });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: "Server error", error: error.message });
+    
+      res.status(500).json({ msg: "Server error"});
     }
   };
   
+
+
+
+  // exports.completeTask = async (req, res) => {
+  //   try {
+  //       const { id } = req.body;
+  //       if (!id) {
+  //           return res.status(400).json({ msg: 'Task ID is required' });
+  //       }
+
+  //       const task = await taskData.findOne({ _id: id });
+  //       if (!task) {
+  //           return res.status(404).json({ msg: 'Task not found or unauthorized' });
+  //       }
+
+  //       const completedTask = new trashData({
+  //           title: task.title,
+  //           dueDate: task.dueDate,
+  //           status: 'completed',
+  //           assignedBy: task.assignedBy,
+  //           assignedTo: task.assignedTo,
+  //           remark: task.remark,
+  //           isActive: false,
+  //       });
+
+  //       await completedTask.save();
+  //       await taskData.findByIdAndDelete({ _id: id });
+
+  //       res.status(200).json({ msg: 'Task marked as completed' });
+  //   } catch (error) {
+  //       console.error(error);
+  //       res.status(500).json({ msg: 'Server error' });
+  //   }
+
+
+
+
