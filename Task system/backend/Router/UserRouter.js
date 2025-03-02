@@ -28,8 +28,15 @@ router.delete('/:id', auth,TaskController. deleteTask);
 
 
 
-// router.put('/completeTask/:id',auth, TaskController.completeTask);
 
+
+router.delete('/completetask/:id', auth, TaskController.completeTask);
+
+
+
+router.get('/trash', auth, TaskController.getTrashTasks); // Get trashed tasks
+
+router.put('/restore/:id', auth, TaskController.restoreTask); // Restore task
 
 module.exports = router;
 

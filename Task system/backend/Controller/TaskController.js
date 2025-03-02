@@ -2,7 +2,7 @@
 
 const taskData = require('../Model/TaskModel')
 const userData = require('../Model/UserModel')
-// const trashData= require('../Model/TrashModel')
+const trashData= require('../Model/TrashModel')
 
 
 exports.createTask = async(req,res)=>{
@@ -101,37 +101,85 @@ exports.myTasks = async (req, res) => {
 
 
 
-  // exports.completeTask = async (req, res) => {
-  //   try {
-  //       const { id } = req.body;
-  //       if (!id) {
-  //           return res.status(400).json({ msg: 'Task ID is required' });
-  //       }
-
-  //       const task = await taskData.findOne({ _id: id });
-  //       if (!task) {
-  //           return res.status(404).json({ msg: 'Task not found or unauthorized' });
-  //       }
-
-  //       const completedTask = new trashData({
-  //           title: task.title,
-  //           dueDate: task.dueDate,
-  //           status: 'completed',
-  //           assignedBy: task.assignedBy,
-  //           assignedTo: task.assignedTo,
-  //           remark: task.remark,
-  //           isActive: false,
-  //       });
-
-  //       await completedTask.save();
-  //       await taskData.findByIdAndDelete({ _id: id });
-
-  //       res.status(200).json({ msg: 'Task marked as completed' });
-  //   } catch (error) {
-  //       console.error(error);
-  //       res.status(500).json({ msg: 'Server error' });
-  //   }
 
 
 
 
+  exports.completeTask = async (req, res) => {
+    try {
+        const { id } = req.params; // Extract ID from URL params
+
+        if (!id) {
+            return res.status(400).json({ msg: 'Task ID is required' });
+        }
+
+        const task = await taskData.findById(id);
+        if (!task) {
+            return res.status(404).json({ msg: 'Task not found' });
+        }
+
+        // Move task to trash collection
+        const completedTask = new trashData({
+            title: task.title,
+            dueDate: task.dueDate,
+            status: 'Completed',  // Keep status as 'Completed'
+            assignedBy: task.assignedBy,
+            assignedTo: task.assignedTo,
+            remark: task.remark,
+            isActive: false, // Indicates task is inactive (trashed)
+        });
+
+        await completedTask.save(); // Save to trash collection
+        await taskData.findByIdAndDelete(id); // Remove from active tasks
+
+        return res.status(200).json({ msg: 'Task marked as completed and moved to trash' });
+
+    } catch (error) {
+        console.error('Error completing task:', error);
+        return res.status(500).json({ msg: 'Internal Server Error' });
+    }
+};
+
+
+
+// Get all trashed tasks
+exports.getTrashTasks = async (req, res) => {
+  try {
+      const trashedTasks = await trashData.find();
+      res.status(200).json(trashedTasks);
+  } catch (error) {
+      console.error("Error fetching trash tasks:", error);
+      res.status(500).json({ msg: "Internal Server Error" });
+  }
+};
+
+// Restore a task from trash
+exports.restoreTask = async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      const task = await trashData.findById(id);
+      if (!task) {
+          return res.status(404).json({ msg: "Task not found in trash" });
+      }
+
+      // Restore task back to active collection
+      const restoredTask = new taskData({
+          title: task.title,
+          dueDate: task.dueDate,
+          status: 'Pending',  // Reset status if needed
+          assignedBy: task.assignedBy,
+          assignedTo: task.assignedTo,
+          remark: task.remark,
+          isActive: true,
+      });
+
+      await restoredTask.save();  // Save back to active tasks
+      await trashData.findByIdAndDelete(id);  // Remove from trash
+
+      res.status(200).json({ msg: "Task restored successfully" });
+  } catch (error) {
+      console.error("Error restoring task:", error);
+      res.status(500).json({ msg: "Internal Server Error" });
+  }
+};

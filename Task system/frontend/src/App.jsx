@@ -8,6 +8,8 @@ import CreateTask from './components/CreateTask';
 import ForgotPassword from './components/ForgotPassword';
 import TaskManager from './components/TaskManager';
 
+import TrashPage from './components/TrashPage';
+
 import './App.css';
 import './index.css';
 
@@ -20,6 +22,8 @@ function App() {
         <Route path="/createtask" element={<CreateTask />} />
         
         <Route path="/taskmanager" element={<TaskManager />} /> 
+
+        <Route path="/TrashPage" element={<TrashPage />} />
      
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         

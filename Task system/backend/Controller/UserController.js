@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const secretkey = ' NBKFFJBFDKDJLNBJKFVJGFKVK'
 const userData= require('../Model/UserModel')
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 
 exports.register = async(req,res)=>{
@@ -32,6 +34,35 @@ exports.register = async(req,res)=>{
    }
   const result = new userData(Data)
   await result.save()
+
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port:587,
+    auth: {
+      //  user:'uttamftspl@gmail.com',
+      //  pass:'wlxj plim jsij fvzv'
+      user: "praveenkatewa.45@gmail.com",
+      pass:"uhzy ezsr ynmg hsrt"
+    }
+  });
+
+  const mailOptions = {
+    from:"uttamftspl@gmail.com",
+    to: email,
+    subject: 'Account created successfully',
+    text: 'Welcome to Task System'
+  };
+
+  transporter.sendMail(mailOptions, (error, info)=>{
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
+
   res.status(201).json({msg:"Signup successfully",result})
 }
 
