@@ -39,7 +39,7 @@ exports.getuser=async(req,res)=>{
 exports.myTasks = async (req, res) => {
     const tasks = await taskData.find({ assignedTo: req.user.userId })
       .populate('assignedBy', 'name')
-      // .populate('assignedTo', 'name');
+      .populate('assignedTo', 'name');
       console.log(">>>>>>tasks>>>>>",tasks)
   
     res.status(201).json(tasks);
@@ -183,3 +183,19 @@ exports.restoreTask = async (req, res) => {
       res.status(500).json({ msg: "Internal Server Error" });
   }
 };
+
+
+
+
+
+
+
+// exports.CompetedTask = async (req, res) => {
+//   try {
+//       const trashedTasks = await trashData.find();
+//       res.status(200).json(trashedTasks);
+//   } catch (error) {
+//       console.error("Error fetching trash tasks:", error);
+//       res.status(500).json({ msg: "Internal Server Error" });
+//   }
+// };

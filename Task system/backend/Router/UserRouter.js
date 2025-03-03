@@ -37,6 +37,7 @@ router.delete('/completetask/:id', auth, TaskController.completeTask);
 router.get('/trash', auth, TaskController.getTrashTasks); // Get trashed tasks
 
 router.put('/restore/:id', auth, TaskController.restoreTask); // Restore task
+// router.get('/completedTask/:id',auth,TaskController.myCompelteTask)
 
 module.exports = router;
 

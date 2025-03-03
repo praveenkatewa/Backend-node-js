@@ -7,7 +7,10 @@ const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
   const [assignedTasks, setAssignedTasks] = useState([]);
   const [editTask, setEditTask] = useState(null);
-  // const [trashTasks, setTrashTasks] = useState([]);
+ 
+
+  const [CompelteTask,setCompletedTask]=useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +56,8 @@ const TaskManager = () => {
     }
   };
 
+
+ 
   const handleUpdate = (task) => {
     setEditTask(task);
   };
@@ -75,6 +80,30 @@ const TaskManager = () => {
       alert('Failed to update task');
     }
   };
+
+
+
+const myCompelteTask = async () => {
+  try {
+      const response = await axios.get("http://localhost:5000/task/trash", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setCompletedTask(response.data);
+      console.log("deleted task",setCompletedTask)
+
+  } catch (error) {
+      console.error("Error :", error);
+      alert("Failed to load trash tasks.");
+  }
+};
+
+
+
+
+
+
+
+
 
   const completedTask = async (task) => {
     console.log("Completing task:", task);
@@ -107,6 +136,9 @@ const TaskManager = () => {
     }
 };
 
+  useEffect(() => {
+    myCompelteTask()
+  }, [])
   
   
 
@@ -155,7 +187,9 @@ const TaskManager = () => {
                   <td>
                     <button style={styles.completeButton} onClick={() => completedTask(task)}>Complete</button>
                   </td>
+
                 </tr>
+                
               ))
             ) : (
               <tr>
@@ -164,6 +198,16 @@ const TaskManager = () => {
             )}
           </tbody>
         </table>
+        <div>
+          <label>pending</label>
+          <div>{tasks.length}</div>
+          <label>complete</label>
+          <div>{CompelteTask.length}</div>
+
+          <div>
+
+          </div>
+        </div>
       </div>
 
       <div style={styles.taskSection}>

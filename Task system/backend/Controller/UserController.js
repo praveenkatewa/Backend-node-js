@@ -40,8 +40,7 @@ exports.register = async(req,res)=>{
     host: 'smtp.gmail.com',
     port:587,
     auth: {
-      //  user:'uttamftspl@gmail.com',
-      //  pass:'wlxj plim jsij fvzv'
+    
       user: "praveenkatewa.45@gmail.com",
       pass:"uhzy ezsr ynmg hsrt"
     }
@@ -118,3 +117,4 @@ exports.forgotPassword=async(req,res)=>{
   const token = jwt.sign({_id:user._id},secretkey,{expiresIn:'120h'})
   res.status(200).json({msg:"password updated successfully",token})
 }
+
