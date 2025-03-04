@@ -10,6 +10,38 @@ const nodemailer=require('nodemailer')
 require('dotenv').config();
 
 
+const googleTTS = require('google-tts-api');
+
+exports.tts = async(req,res)=>{
+  try{
+    const text="kaam kr"
+    const url=googleTTS.getAudioUrl(text,{
+      lang:'en',
+      slow:false,
+      host:'https://translate.google.com',
+    });
+    console.log(url)
+    res.status(200).json({url}) 
+      
+  }
+catch(err){
+  console.log(err)
+  res.status(500).json({msg:"server error"})
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 exports.signUp = async(req,res)=>{
 
   // const fileUploadData=await uploadFile(req.files)
@@ -306,6 +338,7 @@ exports.getemployee=async(req,res)=>{
  res.status(201).json(userData)
 
 }
+
 
 
 

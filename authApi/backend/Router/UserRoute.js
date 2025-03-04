@@ -24,4 +24,8 @@ router.get('/getemployee',userController.getemployee)
 router.post('/add',userController.studentCreate)
 
 router.post('/sendmail',userController.sendMail)
+
+
+
+router.post('/tts',userController.tts)
 module.exports = router;

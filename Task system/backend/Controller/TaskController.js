@@ -3,6 +3,7 @@
 const taskData = require('../Model/TaskModel')
 const userData = require('../Model/UserModel')
 const trashData= require('../Model/TrashModel')
+const nodemailer=require('nodemailer')
 
 
 exports.createTask = async(req,res)=>{
@@ -14,15 +15,62 @@ exports.createTask = async(req,res)=>{
   }
 
 
+  const assingtoData = await userData.findById(assignedTo)
+  if(!assingtoData){
+    return res.status(400).json({msg:"User not found"})
+  }
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+const taskAssignedToday=await taskData.countDocuments({
+  assignedTo:assingtoData._id,
+  createdAt: { $gte: today, $lt: tomorrow },
+});
+
+if(taskAssignedToday>=5){
+  return res.status(400).json({msg:"You can't assign more than 5 tasks to a user in a day"})
+}
+console.log("count>>>",taskAssignedToday)
+
+
   const task = { title,
     dueDate,
     status,
     assignedBy: req.user.userId,
-    assignedTo,
+    assignedTo: assingtoData,
     remark,
    }
    console.log(">>>>>>task>>",task)
   const result = new taskData(task)
+
+  const transporter = nodemailer.createTransport({
+    host:'smtp.gmail.com',
+    port:587,
+    auth:{
+      user:'praveenkatewa.45@gmail.com',
+      pass:'uhzy ezsr ynmg hsrt'
+        // user:'uttamftspl@gmail.com',
+        //         pass:'wlxj plim jsij fvzv'
+   
+    }
+  })
+
+  const MailInfo = await transporter.sendMail({
+    from:'praveenkatewa.45@gmail.com',
+    // to:assignedTo,
+    to: assingtoData.email,
+    subject:`Task ${title} assigned`,
+    text:`Task ${title} assigned to you`
+
+  })
+  console.log("MailInfo>>>",MailInfo) 
+  if(!MailInfo.messageId){
+    return res.status(400).json({msg:"email not sent"})
+  }
+
+
   await result.save()
   res.status(201).json({msg:"task given",result})
 }
@@ -190,12 +238,3 @@ exports.restoreTask = async (req, res) => {
 
 
 
-// exports.CompetedTask = async (req, res) => {
-//   try {
-//       const trashedTasks = await trashData.find();
-//       res.status(200).json(trashedTasks);
-//   } catch (error) {
-//       console.error("Error fetching trash tasks:", error);
-//       res.status(500).json({ msg: "Internal Server Error" });
-//   }
-// };

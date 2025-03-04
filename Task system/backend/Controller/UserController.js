@@ -100,6 +100,8 @@ exports.updatePassword=async(req,res)=>{
   res.status(200).json({msg:"password updated successfully"})
 }
 
+
+
 exports.forgotPassword=async(req,res)=>{
   const {email,newPassword} = req.body;
   console.log(req.body)

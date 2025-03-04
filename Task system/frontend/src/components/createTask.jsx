@@ -71,6 +71,13 @@ const CreateTask = () => {
 
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const [minDate, setMinDate] = useState('');
+
+  const setDate=()=>{
+    const today=new Date().toISOString().split('T')[0]
+    setMinDate(today)
+  }
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -94,6 +101,7 @@ const CreateTask = () => {
     };
 
     fetchUsers();
+    setDate()
   }, [navigate]);
 
   const handleChange = (e) => {
