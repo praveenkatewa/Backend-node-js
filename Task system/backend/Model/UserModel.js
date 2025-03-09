@@ -30,7 +30,12 @@ const userSchema = new Schema({
   phone: {
     type: String
   },
-  
+  otp: {
+    type: String
+  },
+  otpExpire: {
+    type: Date
+  }
 
   
 },{versionKey:false,timestamps:true});

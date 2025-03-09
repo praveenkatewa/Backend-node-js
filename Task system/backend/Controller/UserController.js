@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const secretkey = ' NBKFFJBFDKDJLNBJKFVJGFKVK'
 const userData= require('../Model/UserModel')
 const nodemailer = require('nodemailer');
+const moment = require('moment');
 require('dotenv').config();
 
 
@@ -103,7 +104,8 @@ exports.updatePassword=async(req,res)=>{
 
 
 exports.forgotPassword=async(req,res)=>{
-  const {email,newPassword} = req.body;
+  const {email,newPassword,otp} = req.body;
+
   console.log(req.body)
   // return
   const user= await userData.findOne({email});
@@ -112,11 +114,64 @@ exports.forgotPassword=async(req,res)=>{
   if(!user){
     return res.status(404).json({msg:"user not found"})
   }
+const dbotp = user.otp;
+const otpExpire = user.otpExpire;
+console.log("DBOTP>>>",dbotp,otp)
+if(dbotp!=otp){
+  return res.status(404).json({msg:"invalid otp"})
+}
+if(moment().isAfter(otpExpire)){
+  return res.status(404).json({msg:"otp expired"})
+}
+
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(newPassword,salt)
   await userData.updateOne({email},{$set:{password:hashPass}});
 
   const token = jwt.sign({_id:user._id},secretkey,{expiresIn:'120h'})
   res.status(200).json({msg:"password updated successfully",token})
+
+
+
+
+}
+
+exports.getOtp=async(req,res)=>{
+  const {email} = req.body;
+  const user= await userData.findOne({email});  
+  if(!user){
+    return res.status(404).json({msg:"user not found"})
+  } 
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  const otpExpire = moment().add(10, 'minutes');
+  console.log("OTP>>>",otp,otpExpire)
+   await userData.updateOne({email},{$set:{otp,otpExpire}})
+  res.status(200).json({msg:"OTP sent successfully"})
+
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port:587,
+    auth: {
+    
+      user: "praveenkatewa.45@gmail.com",
+      pass:"uhzy ezsr ynmg hsrt"
+    }
+  });
+
+  const mailOptions = {
+    from:"uttamftspl@gmail.com",
+    to: email,
+    subject: 'Account created successfully',
+    text: `Your OTP is ${otp}`
+  };
+
+  transporter.sendMail(mailOptions, (error, info)=>{
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
 }
 

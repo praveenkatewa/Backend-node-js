@@ -9,6 +9,7 @@ import ForgotPassword from './components/ForgotPassword';
 import TaskManager from './components/TaskManager';
 
 import TrashPage from './components/TrashPage';
+import UploadExcel from './components/UploadExcel';
 
 import './App.css';
 import './index.css';
@@ -26,6 +27,7 @@ function App() {
         <Route path="/TrashPage" element={<TrashPage />} />
      
         <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path='/uploadExcel' element = {<UploadExcel/>}/>
         
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>

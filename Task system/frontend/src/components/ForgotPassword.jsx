@@ -6,10 +6,26 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [Getopt,setGetotp]=useState('');  
   const navigate = useNavigate(); // Initialize navigate
+
+
+  const getOtp=async()=>{
+    try{
+      const res = await axios.post('http://localhost:5000/task/getOtp',{email})
+      console.log('Response:',res)
+      alert('otp sent to your email')
+    }catch(err){
+      console.error('Error:',err)
+      alert('Failed to send otp')
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Email:', email);
+    console.log('New Password, Confirm Password, Getotp:',
+      newPassword, confirmPassword,Getopt);
 
     if (newPassword !== confirmPassword) {
       alert('Passwords do not match. Please try again.');
@@ -60,6 +76,20 @@ const ForgotPassword = () => {
             required
           />
         </div>
+        <div className="form-group">
+          <label>otp</label>
+          <input
+            type="text"
+            value={Getopt}
+            onChange={(e) => setGetotp(e.target.value)}
+            
+            required
+          />
+          
+          <button onClick={getOtp}>get opt </button>
+        </div>
+
+
         <button type="submit" className="reset-button">Reset Password</button>
       </form>
     </div>
