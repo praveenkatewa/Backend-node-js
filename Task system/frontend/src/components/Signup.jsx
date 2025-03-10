@@ -7,6 +7,7 @@ import './Signup.css'; // Import the CSS file
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [file,setFile]=useState(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,18 +18,38 @@ const Signup = () => {
     password: ''
   });
 
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+
+    const { name, value,files } = e.target;
+
+    if (files) {
+      setFile(files[0]);  
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
+    const data = new FormData();
+
+    
+    Object.keys(formData).forEach(key => {
+      data.append(key, formData[key]);
+    });
+
+   
+    if (file) {
+      data.append('file', file);
+    }
     try {
-      const res = await axios.post('http://localhost:5000/task/register', formData);
+      const res = await axios.post('http://localhost:5000/task/register', data,);
       console.log('Data saved', res);
       alert('Registration Successful!');
       navigate('/login');
@@ -73,6 +94,13 @@ const Signup = () => {
         <div className="form-group">
           <label>Password:</label>
           <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+        </div>
+
+
+
+        <div className="form-group">
+          <label>Upload Profile Picture:</label>
+          <input type="file" name="file"  accept="image/*" onChange={handleChange} required />
         </div>
         <button type="submit" className="submit-button">Sign Up</button>
         <button type="button" className="login-button" onClick={() => navigate('/login')}>

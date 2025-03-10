@@ -258,6 +258,7 @@ exports.createTaskFromExcel = async(req, res) => {
 
           const formattedDueDate = moment(new Date(Math.round((dueDate - 25569) * 86400 * 1000))).format('DD-MM-YYYY');
           const assingBy = req.user._id;
+          
           const task = new taskModel({
           taskName,
           dueDate: formattedDueDate,

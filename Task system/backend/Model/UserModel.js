@@ -35,6 +35,9 @@ const userSchema = new Schema({
   },
   otpExpire: {
     type: Date
+  },
+  file:{
+    type:String
   }
 
   

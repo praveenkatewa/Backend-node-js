@@ -6,10 +6,12 @@ const userData= require('../Model/UserModel')
 const nodemailer = require('nodemailer');
 const moment = require('moment');
 require('dotenv').config();
+const {fileUpload}=require('../Utility/Clodinary')
 
 
 exports.register = async(req,res)=>{
-  const { email, password,name,role,address,color,phone } = req.body;
+  const { email, password,name,role,address,color,phone,file } = req.body;
+
   console.log(req.body)
 
   if(!(name && email && password && role&&address&&color&&phone)){
@@ -21,6 +23,8 @@ exports.register = async(req,res)=>{
     return res.status(400).json({msg:"user already exist"})
   }
 
+  const fileupload=await fileUpload(req.files)
+
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(password,salt)
 
@@ -31,7 +35,8 @@ exports.register = async(req,res)=>{
     role,
     address,
     color,
-    phone
+    phone,
+    file:fileupload[0].url
    }
   const result = new userData(Data)
   await result.save()
@@ -160,7 +165,7 @@ exports.getOtp=async(req,res)=>{
   });
 
   const mailOptions = {
-    from:"uttamftspl@gmail.com",
+    from:"praveenkatewa.45@gmail.com",
     to: email,
     subject: 'Account created successfully',
     text: `Your OTP is ${otp}`

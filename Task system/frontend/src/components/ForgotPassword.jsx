@@ -33,7 +33,7 @@ const ForgotPassword = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/task/forgotPassword', { email, newPassword });
+      const res = await axios.post('http://localhost:5000/task/forgotPassword', { email, newPassword,otp:Getopt });
       console.log('Response:', res);
       alert('Password reset successful. Redirecting to login...');
 
@@ -76,17 +76,18 @@ const ForgotPassword = () => {
             required
           />
         </div>
+
+
         <div className="form-group">
           <label>otp</label>
           <input
             type="text"
             value={Getopt}
-            onChange={(e) => setGetotp(e.target.value)}
-            
+            onChange={(e) => setGetotp(e.target.value)} 
             required
           />
           
-          <button onClick={getOtp}>get opt </button>
+          <button type="button" onClick={getOtp}>get opt </button>
         </div>
 
 
