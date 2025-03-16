@@ -1,27 +1,26 @@
-const cloudinary = require('cloudinary')
+const cloudinary = require('cloudinary');
 
-require('dotenv').config()
-
-cloudinary.config({
+const dotenv = require('dotenv');
+dotenv.config();
+cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:  process.env.CLOUDINARY_API_KEY,
+  api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
-})
+});
 
-exports.FileUpload = async(file)=>{
+exports.FileUpload = async (file) => {
   const fileArray = Object.values(file);
-
-  console.log('>>>fileArray>>',fileArray);
+  console.log('>>>fileArray>>', fileArray);
   const results = [];
 
   for(file of fileArray){
 
     try {
-      const result_data = await new Promise((resolve,rejetct)=>{
+      const result_data = await new Promise((resolve,reject)=>{
 
         cloudinary.uploader.upload_stream((result,error)=>{
           if(error){
-            rejetct(error)
+            reject(error)
           }
             resolve(result)
         }).end(file.data)

@@ -21,7 +21,7 @@ const UploadExcel = () => {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:5000/task/register/createfromExcel', formData, {
+      const response = await axios.post('http://localhost:5000/task/createfromExcel', formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'multipart/form-data'

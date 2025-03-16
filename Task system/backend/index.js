@@ -3,13 +3,15 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const router = require('./Router/UserRouter')
+const fileUpload = require('express-fileupload');
+
 
 
 require('dotenv').config();
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors())
-
+app.use(fileUpload())
 app.use('/task',router)
 
 

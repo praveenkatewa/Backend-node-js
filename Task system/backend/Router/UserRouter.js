@@ -17,6 +17,7 @@ router.post('/forgotPassword',UserController.forgotPassword);
 
 
 router.post('/createTask',auth,TaskController.createTask);
+router.post('/createfromExcel',auth,TaskController.createTaskFromExcel);
 
 router.get('/myTasks',auth,TaskController.myTasks);
 

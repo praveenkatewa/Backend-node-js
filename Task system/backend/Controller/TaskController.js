@@ -4,6 +4,8 @@ const taskData = require('../Model/TaskModel')
 const userData = require('../Model/UserModel')
 const trashData= require('../Model/TrashModel')
 const nodemailer=require('nodemailer')
+const {excelFileRead} = require('../Utility/ExcelFileUpload')
+const moment = require('moment')
 
 
 exports.createTask = async(req,res)=>{
@@ -75,6 +77,48 @@ console.log("count>>>",taskAssignedToday)
   res.status(201).json({msg:"task given",result})
 }
 
+exports.createTaskFromExcel = async(req, res) => {
+  try {
+      if (!req.files || !req.files.file) {
+           return res.status(400).json({ message: 'File is required' });
+              }
+
+      const jsonData = await excelFileRead(req.files.file)
+      console.log(jsonData);
+
+      for (const data of jsonData) {
+        console.log("data>>>",data)
+        console.log(">>>>user>>",req.user)
+          const { title, dueDate, assignedTo, remark } = data;
+          const assingtoData = await userData.findOne({ email: assignedTo });
+          if (!assingtoData) {
+              return res.status(400).json({message:"Assigned to user not found"})
+          }
+
+          const formattedDueDate = moment(new Date(Math.round((dueDate - 25569) * 86400 * 1000))).format('DD-MM-YYY');
+          console.log(">>>>formattedDueDate>>>",formattedDueDate)
+          const format = moment(formattedDueDate,'DD-MM-YYYY').format()
+          console.log(">>>>format>>>",format)
+         
+          const assingBy = req.user.userId;
+          console.log(assingBy)
+       
+          const task = new taskData({
+              title,
+              dueDate: format,
+              assignedTo: assingtoData._id,
+              remark,
+              assignedBy: assingBy
+          });
+          await task.save();
+          
+      }
+
+      res.status(201).json({ message: 'Tasks created from Excel file' });
+  } catch (err) {
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 exports.getuser=async(req,res)=>{
   const user = await userData.find()
@@ -237,43 +281,43 @@ exports.restoreTask = async (req, res) => {
 
 
 
-exports.createTaskFromExcel = async(req, res) => {
-  try {
-      const file = req.files.file;
-      const workbook = xlsx.read(file.data, { type: 'buffer' });
-      console.log('WORKBOOK >>>>',workbook);
-      const sheetName = workbook.SheetNames[0];
-      console.log("sheetname>>>>",sheetName);
-      const worksheet = workbook.Sheets[sheetName];
-      console.log("worksheet>>>",worksheet)
-      const jsonData = xlsx.utils.sheet_to_json(worksheet);
-      console.log('jsonData>>>',jsonData)
+// exports.createTaskFromExcel = async(req, res) => {
+//   try {
+//       const file = req.files.file;
+//       const workbook = xlsx.read(file.data, { type: 'buffer' });
+//       console.log('WORKBOOK >>>>',workbook);
+//       const sheetName = workbook.SheetNames[0];
+//       console.log("sheetname>>>>",sheetName);
+//       const worksheet = workbook.Sheets[sheetName];
+//       console.log("worksheet>>>",worksheet)
+//       const jsonData = xlsx.utils.sheet_to_json(worksheet);
+//       console.log('jsonData>>>',jsonData)
       
-      for (const data of jsonData) {
-          const { taskName, dueDate, assignTo, remark } = data;
-          const assingtoData = await userModel.findOne({ email: assignTo });
-          if (!assingtoData) {
-          return res.status(400).json({ message: `Assign to email ${assignTo} not found` });
-          }
+//       for (const data of jsonData) {
+//           const { taskName, dueDate, assignTo, remark } = data;
+//           const assingtoData = await userModel.findOne({ email: assignTo });
+//           if (!assingtoData) {
+//           return res.status(400).json({ message: `Assign to email ${assignTo} not found` });
+//           }
 
-          const formattedDueDate = moment(new Date(Math.round((dueDate - 25569) * 86400 * 1000))).format('DD-MM-YYYY');
-          const assingBy = req.user._id;
+//           const formattedDueDate = moment(new Date(Math.round((dueDate - 25569) * 86400 * 1000))).format('DD-MM-YYYY');
+//           const assingBy = req.user._id;
           
-          const task = new taskModel({
-          taskName,
-          dueDate: formattedDueDate,
-          assignTo: assingtoData,
-          remark,
-          assingBy: assingBy
-          });
+//           const task = new taskModel({
+//           taskName,
+//           dueDate: formattedDueDate,
+//           assignTo: assingtoData,
+//           remark,
+//           assingBy: assingBy
+//           });
 
-          await task.save();
-      }
+//           await task.save();
+//       }
 
-      res.status(201).json({ message: 'Tasks created from Excel file' });
-  } catch (err) {
-      res.status(500).json({ message: 'Internal server error' });
-  }
-}
+//       res.status(201).json({ message: 'Tasks created from Excel file' });
+//   } catch (err) {
+//       res.status(500).json({ message: 'Internal server error' });
+//   }
+// }
 
 
