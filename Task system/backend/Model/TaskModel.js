@@ -21,10 +21,8 @@ const taskSchema = new Schema({
     ref: 'User',
     required: true
   },
-  status: {
-    type: String,
-    required: true  //ENUM
-  },
+ status: { type: String, required: true, enum: ['pending', 'in-progress', 'completed'], default: 'pending' },
+ 
   remark: {
     type: String,
     required: true

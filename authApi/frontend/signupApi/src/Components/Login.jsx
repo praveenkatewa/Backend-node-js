@@ -7,6 +7,11 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate()
 
+  const [dark,setDark]=useState(false)
+
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -32,8 +37,22 @@ const Login = () => {
     }
   };
 
+  const darkmode=()=>{
+    setDark(!dark)
+    if(dark){
+       document.querySelector('body').style.backgroundColor='black'
+
+
+    }else{
+      document.querySelector('body').style.backgroundColor='white'
+    }
+
+   
+  }
+
   return (
     <div>
+    <button onClick={darkmode}>dark</button>
       <h2>Login</h2>
       <form  style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '300px', margin: '0 auto' }}
        onSubmit={handleSubmit}>

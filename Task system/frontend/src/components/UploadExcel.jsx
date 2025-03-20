@@ -37,7 +37,7 @@ const UploadExcel = () => {
     <div>
       <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
-      <button onClick={()=>navigate('/tasks')}> All tasks     </button>
+      <button onClick={()=>navigate('/taskmanager')}> All tasks     </button>
     </div>
   );
 };
